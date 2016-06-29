@@ -15,6 +15,18 @@ $(document).ready(function(){
 	$('#activity-choices').append("<option>"+e.name+"</option>");
 	})
 
+	$("#day-add").on("click", function(event){
+		var day = {
+			num: $(".day-buttons").length + 1,
+			hotels: $("#hotel"),
+			restaurant: $("#restaurant"),
+			activity: $("#activity"),
+			marker: []
+		};
+		$(".day-buttons").append("<span class='btn btn-circle day-btn'>" + day.num + "</span>");
+	});
+
+
 
 	$("#hotel-button").on("click", function(event){
 		var hotel = {
@@ -28,7 +40,8 @@ $(document).ready(function(){
 				return hotel = e;
 			}
 		})
-		drawMarker ('hotel' , hotel.place.location, map)
+		$(map).data(hotel.name, {data: drawMarker('hotel', hotel.place.location, map)});
+		console.dir(map);
 
 	})
 	$("#restaurant-button").on("click", function(event){
@@ -43,7 +56,7 @@ $(document).ready(function(){
 				return restaurant = e;
 			}
 		})
-
+		// we need to modify this
 		drawMarker('restaurant', restaurant.place.location, map)
 
 	})
@@ -55,17 +68,21 @@ $(document).ready(function(){
 		$("#act").append("<span class='title'>" + activity.name + "</span>" + "<button id = 'del-activity' class='btn btn-xs btn-danger remove btn-circle'>x</button>");
 
 		activities.forEach(function (e) {
-			if(activity.name===e.name) {
+			if(activity.name === e.name) {
 				return activity = e;
 			}
 		})
 
-		drawMarker('activity', activity.place.location, map);
+		$(map).data(activity.name, drawMarker('activity', activity.place.location, map));
 	})
 
 
-	$('#itinery').on('click', '.remove', function (event) {
-
-	})
+	// $('#itinerary').on('click', '.remove', function (event) {
+	// 	console.dir($(this).context.previousSibling.innerText);
+	// 	console.log($(map).index($(this).context.previousSibling.innerText));
+	// 	$(map).index($(this).context.previousSibling.innerText).marker.setMap(null);
+	// 	$(this).context.previousSibling.remove();
+	// 	$(this).remove();
+	// })
 
 });
