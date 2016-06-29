@@ -42,6 +42,7 @@ $(document).ready(function(){
 		thisDayIndex = Number($this.text()) - 1;
 		$('.day-buttons').children().removeClass("current-day");
 		$this.addClass('current-day');
+		$('#day-num').text( "Day " + Number(thisDayIndex + 1));
 
 		arrayOfDays[prevDayIndex].markers.forEach(function (e){
 			e.marker.setMap(null);
@@ -86,7 +87,6 @@ $(document).ready(function(){
 			name: hotel.name,
 			marker: drawMarker('hotel', hotel.place.location, map)
 		})
-		console.dir(map);
 	})
 
 	$("#restaurant-button").on("click", function(event){
@@ -131,9 +131,21 @@ $(document).ready(function(){
 	$('#itinerary').on('click', '.remove', function (event) {
 		$this = $(this);
 		var $toRemove = $this.prev();
+		console.log($this.context)
+		if($this.context.id == 'del-hotel') {
+			console.log($toRemove.text());
+			var index = arrayOfDays[thisDayIndex].hotels.indexOf($toRemove.text() + "");
+			arrayOfDays[thisDayIndex].hotels.splice(index, 1);
+			var mindex = arrayOfDays[thisDayIndex].markers.forEach(function(e, i){
+				if(e.name == $toRemove.text()){
+					e.marker.setMap(null);
+					return i;
+				}
+			})
+			arrayOfDays[thisDayIndex].markers.splice(mindex, 1);
+			console.log(arrayOfDays[thisDayIndex].hotels);
+			console.log("this is the marker array: ", arrayOfDays[thisDayIndex].markers);
 
-		if($this.id == 'del-hotel') {
-			arrayOfDays[thisDayIndex]
 		}		
 		else if ($this.id == 'del-activity') {
 			//adsf
@@ -144,6 +156,27 @@ $(document).ready(function(){
 
 		$this.remove();
 		$toRemove.remove();
+	})
+
+	$('#day-title').on('click', '.remove', function(event){
+		var nextDay = $(".current-day")
+		$(".current-day").remove();
+		arrayOfDays[thisDayIndex].markers.forEach(function(e){
+			e.marker.setMap(null);
+		})
+		arrayOfDays.splice(thisDayIndex, 1);
+		console.log(arrayOfDays)
+		for(var i = 0; i < arrayOfDays.length; i++){
+			arrayOfDays[i].num = i + 1;
+		}
+		console.log(arrayOfDays);
+		$(".day-buttons").children().remove();
+		arrayOfDays.forEach(function(e){
+			console.log("hi")
+			$(".day-buttons").append("<span class='btn btn-circle day-btn'>" + e.num + "</span>");
+		})
+		$(".day-btn").first().click();
+
 	})
 
 });
