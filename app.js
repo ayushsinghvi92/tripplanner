@@ -3,6 +3,8 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var swig = require('swig');
 var path = require('path');
+var attractions = require('./routes/api/attractions');
+var days = require('./routes/api/days');
 
 var db = require('./models');
 
@@ -24,6 +26,10 @@ app.use('/jquery', express.static(path.join(__dirname, '/node_modules/jquery/dis
 
 // serve any other static files
 app.use(express.static(path.join(__dirname, '/public')));
+
+app.use('/api', attractions);
+app.use('/api', days);
+
 
 // serve dynamic routes
 app.use(require('./routes'));
