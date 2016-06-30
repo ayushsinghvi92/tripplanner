@@ -1,7 +1,10 @@
 var Promise = require('bluebird');
 var router = require('express').Router();
 var Day = require('../../models/day');
-var db
+var Hotel = require('../../models/hotel');
+var Act = require('../../models/activity');
+var Rest = require('../../models/restaurant');
+
 
 //list all the days
 router.get('/days', function(req, res){
@@ -45,16 +48,13 @@ router.delete('/day/:id', function (req, res) {
 		return Day.findAll();
 	})
 	.then(function (days) {
-		console.log('days:',days);
 		var arrProm = days.map(function (day, i){
 			return day.update({number: i+1});
 		})
 		return Promise.all(arrProm);
 	})
 	.then(function (savedDays){
-		console.log("reached sending area")
 		res.send({message: "deleted"})
-		console.log('saved days:', savedDays);
 		return savedDays;
 	})
 	.catch(console.error.bind(console))
@@ -62,19 +62,43 @@ router.delete('/day/:id', function (req, res) {
 
 //update info on one day
 
-router.post('/day/:id/:attraction', function (req,res) {
+router.post('/day/:id/:attraction', function (req, res) {
+
 	Day.findOne({where:{
 		number:req.params.id
-	}}).then(function (day){
+	}})
+	.then(function (day){
 		if(req.params.attraction === 'hotel') {
-			day.hotelName = req.body.hotel;
-		} else if (req.params.attraction === 'activities') {
-			day.activitiesArr.push(req.body.activity);
+			Hotel.findOne({
+				where:{
+					id: req.body.id
+				}
+			})
+			.then(function(hotel){
+				return day.setHotel(hotel);
+			}).catch(console.error);
+		} else if (req.params.attraction === 'activity') {
+			Act.findOne({
+				where:{
+					id: req.body.id
+				}
+			})
+			.then(function(act){
+				console.log(day);
+				day.setDay_Activities(act)
+			}).catch(console.error);
 		} else {
-			day.restaurantsArr.push(req.body.restaurant)
+			Rest.findOne({
+				where:{
+					name: req.body.name
+				}
+			})
+			.then(function(rest){
+				day.setDay_Restaurants(rest)
+			}).catch(console.error);
 		}
 		day.save();
-	}).catch(consoel.error)
+	}).catch(console.error)
 })
 
 //delete info on one day 

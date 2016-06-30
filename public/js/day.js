@@ -93,7 +93,15 @@ var dayModule = (function () {
   // day updating
 
   Day.prototype.addAttraction = function (attraction) {
-    // adding to the day object
+    var num = this.number
+    var string = "api/day/" + num + "/" + attraction.type;
+    $.post(string, {id: attraction.id});
+    // $.ajax({
+    //   url: "api/day/" + num + "/" + attraction.type,
+    //   method: "POST",
+    //   data: {data: attraction}
+    // }).then(function(){console.log("reached here")});
+  
     switch (attraction.type) {
       case 'hotel':
         if (this.hotel) this.hotel.hide();

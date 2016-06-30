@@ -78,10 +78,8 @@ var daysModule = (function () {
       url: '/api/day/' + deleteDay.number,
       type: 'DELETE',
       success: function () {
-        console.log("deleted")
       },
       error: function () {
-        console.error("couldnt delete")
       }
     });
   }
@@ -109,6 +107,7 @@ var daysModule = (function () {
 
     load: function () {
       $(loadDays);
+
     },
 
     switchTo: switchTo,
