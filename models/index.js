@@ -9,9 +9,9 @@ var Day = require('./day');
 Hotel.belongsTo(Place);
 Restaurant.belongsTo(Place);
 Activity.belongsTo(Place);
-Day.belongsTo(Hotel);
-Day.belongsToMany(Restaurant, {through: 'restaurantsArr'});
-Day.belongsToMany(Activity, {through: 'activitiesArr'});
+Day.belongsTo(Hotel, {as: 'day_hotel'});
+Day.belongsToMany(Restaurant, {through: 'day_restaurants'});
+Day.belongsToMany(Activity, {through: 'day_activities'});
 
 
 module.exports = db;

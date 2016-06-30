@@ -45,15 +45,30 @@ var daysModule = (function () {
     $removeButton.on('click', deleteCurrentDay);
   });
 
-  function addDay () {
+  function addDay (e) {
     if (this && this.blur) this.blur(); // removes focus box from buttons
-    var newDay = dayModule.create({ number: days.length + 1 }); // dayModule
-    days.push(newDay);// what we need to replace - make it persistent
+
+      var newDay = dayModule.create({ number: days.length + 1 });// dayModule
+      days.push(newDay);// what we need to replace - make it persistent
 
     if (days.length === 1) {
       currentDay = newDay;
       switchTo(currentDay);
     }
+  }
+
+
+  function loadDays(){
+    $.get('/api/days').then(function(dayArr){
+      dayArr.forEach(function(e){
+        var newDay = dayModule.create(e);
+        days.push(newDay);
+      if (days.length === 1) {
+        currentDay = newDay;
+        switchTo(currentDay);
+    }
+      })
+    })
   }
 
   function deleteCurrentDay () {
@@ -76,7 +91,7 @@ var daysModule = (function () {
   var methods = {
 
     load: function () {
-      $(addDay);
+      $(loadDays);
     },
 
     switchTo: switchTo,
