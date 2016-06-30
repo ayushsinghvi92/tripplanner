@@ -12,11 +12,9 @@ router.get('/days', function(req, res){
 
 //create a new day
 router.post('/days', function(req, res){
+	console.log(req.body.number);
 	Day.build({
-		number: req.body.number,
-		hotelName: req.body.hotel,
-		restaurantsArr: req.body.restaurants,
-		activitiesArr: req.body.activities
+		number: req.body.number
 	}).save()
 	  .then(function(){
 	  	res.send({message: "data is saved"});
@@ -38,17 +36,35 @@ router.get('/day/:id', function (req, res) {
 
 router.delete('/day/:id', function (req, res) {
 	Day.findOne({where: {
-		id: req.params.id
-	}}).then(function (day) {
-		day.destroy();
-	}).catch(console.error)
+		number: req.params.id
+	}})
+	.then(function (day) {
+		return day.destroy();
+	})
+	.then(function () {
+		return Day.findAll();
+	})
+	.then(function (days) {
+		console.log('days:',days);
+		var arrProm = days.map(function (day, i){
+			return day.update({number: i+1});
+		})
+		return Promise.all(arrProm);
+	})
+	.then(function (savedDays){
+		console.log("reached sending area")
+		res.send({message: "deleted"})
+		console.log('saved days:', savedDays);
+		return savedDays;
+	})
+	.catch(console.error.bind(console))
 })
 
 //update info on one day
 
 router.post('/day/:id/:attraction', function (req,res) {
 	Day.findOne({where:{
-		id:req.params.id
+		number:req.params.id
 	}}).then(function (day){
 		if(req.params.attraction === 'hotel') {
 			day.hotelName = req.body.hotel;

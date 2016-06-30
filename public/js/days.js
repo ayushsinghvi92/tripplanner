@@ -48,8 +48,10 @@ var daysModule = (function () {
   function addDay (e) {
     if (this && this.blur) this.blur(); // removes focus box from buttons
 
-      var newDay = dayModule.create({ number: days.length + 1 });// dayModule
-      days.push(newDay);// what we need to replace - make it persistent
+    var newDay = dayModule.create({ number: days.length + 1 });// dayModule
+    days.push(newDay);// what we need to replace - make it persistent
+
+    $.post('/api/days', {number: newDay.number})
 
     if (days.length === 1) {
       currentDay = newDay;
@@ -71,6 +73,19 @@ var daysModule = (function () {
     })
   }
 
+  function deleteFromBackEnd (deleteDay) {
+    $.ajax({
+      url: '/api/day/' + deleteDay.number,
+      type: 'DELETE',
+      success: function () {
+        console.log("deleted")
+      },
+      error: function () {
+        console.error("couldnt delete")
+      }
+    });
+  }
+
   function deleteCurrentDay () {
     // prevent deleting last day
     if (days.length < 2 || !currentDay) return;
@@ -82,6 +97,8 @@ var daysModule = (function () {
     days.forEach(function (day, i) {
       day.setNumber(i + 1);
     });
+    deleteFromBackEnd(previousDay);
+
     switchTo(newCurrent);
     previousDay.hideButton();
   }
