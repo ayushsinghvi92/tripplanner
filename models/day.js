@@ -3,9 +3,7 @@ var db = require('./_db');
 
 var Day =  db.define('day', {
 	number: {
-		type: Sequelize.INTEGER,
-		allowNull: false,
-		unique: true
+		type: Sequelize.INTEGER
 	},
 	hotelName: {
 		type: Sequelize.STRING

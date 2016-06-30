@@ -10,13 +10,13 @@ router.get('/hotels', function(req, res){
 	}).catch(console.error);
 });
 
-router.get('/restaurant', function(req, res){
+router.get('/restaurants', function(req, res){
 	Restaurant.findAll({}).then(function(result){
 		res.send(result);
 	}).catch(console.error);
 });
 
-router.get('/activity', function(req, res){
+router.get('/activities', function(req, res){
 	Activity.findAll({}).then(function(result){
 		res.send(result);
 	}).catch(console.error);

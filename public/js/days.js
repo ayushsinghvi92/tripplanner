@@ -48,7 +48,8 @@ var daysModule = (function () {
   function addDay () {
     if (this && this.blur) this.blur(); // removes focus box from buttons
     var newDay = dayModule.create({ number: days.length + 1 }); // dayModule
-    days.push(newDay);
+    days.push(newDay);// what we need to replace - make it persistent
+
     if (days.length === 1) {
       currentDay = newDay;
       switchTo(currentDay);
